@@ -1,0 +1,26 @@
+Ultima IV sounds
+
+The game has 13 basic sound effects. Two of the effects, used for spells, can take variables for length, pitch etc. Several other sounds, such as sound 7 and sound 0, rely on multiple versions, or multiple versions with unique gaps between them to create further diversification of the games sounds. 2 more sounds come from ‘graphics’ functions, which are used together exclusively with the tremor effect.
+
+To implement in code, either the timing will have to be duplicated, or a baseline timing from the game will have to used, and just played at the correct time. Either option may prove difficult to perfectly replicate sounds, as some very distinct sounds are derived mostly from the spacings (walk effects in particular), rather the effect itself, and the spacings vary with the speed the game is running at, whilst the speed also varies the sounds around the spaces simultaneously. To perfectly replicate sounds, the speed of the game would need to vary the space between calls for the sounds, and the sounds themselves.
+
+
+Sounds and their action assignments
+
+Sound 0 - Used normal, combat and horse movement. Usually played twice, to give distinctive sound. For ‘slow progress’ the sound is only played once. For slow progress when giddy-uping on a horse, sound is played twice, with out a gap(which normal walking has) For giddyup movement, It is played 4 times, with 3 unique gaps.
+Sound 1 - Blocked, All must use same exit!, Not Here!, May NOT use, Shop ‘error’, Dropped Some!, Keyboard ‘error’, Ask ‘error’
+Sound 2 - Bad Command, Broadsides Only!
+Sound 3 - PC Hit(Poisoned!, Electrified!, Fiery Hit!, Slept!, Lava Hit!, Magical Hit!, Hit!), Fire!, Missile Attack
+Sound 4 - Missed, Attack Ranged
+Sound 5 - Melee Damage?(pc)
+Sound 6 - Jinx Damage, NPC Damage, NPC Combat Poison/Sleep Field Damage, Starving Damage, Projectile Damage, Tremor Damage, Candle Lit!, Party Damage(from pirate ship or dragons etc.? 1x per party member, which makes for 8 different sounds or code to represent this)
+Sound 7 - sleep/poison/acid effects, PC Damage, Magic Ball effect(3 sounds in a row), Fountain - Neck—Nasty!, Argh-Choke-Gasp! 
+Sound 8 - Evaded!, food stolen, gold stolen, Flees!, No party formed! Failed! Pc leaves combat
+Sound 9 - Spells (combined with spell preamble, sound 10), Balron/Reaper attack, LB heal, LB Level up, LB resurrect, Shop heal, Moongate, Partial Avatarhood, 
+Sound 10 - Spell Preamble, LB Heal Preamble, LB Resurrect Preamble (combined with sound 9)
+Sound 11 Whirlpool effect
+Sound 12 Twister effect
+
+Tremor - Tremor’s effect sound comes from two graphic effects, not a sound effect. The damage on each monster after is a normal sound(6)
+
+
