@@ -3,7 +3,6 @@
  */
 
 #include <string.h>
-#include <string.h>
 #include <vector>
 
 #include "u4.h"
@@ -42,6 +41,29 @@ bool isPerson(Object *punknown) {
         return true;
     else
         return false;
+}
+
+/**
+ * Splits a string into substrings, divided by the charactars in
+ * separators.  Multiple adjacent seperators are treated as one.
+ */
+static std::vector<string> split(const string &s, const string &separators) {
+    std::vector<string> result;
+    string current;
+
+    for (unsigned i = 0; i < s.length(); i++) {
+        if (separators.find(s[i]) != string::npos) {
+            if (current.length() > 0)
+                result.push_back(current);
+            current.erase();
+        } else
+            current += s[i];
+    }
+
+    if (current.length() > 0)
+        result.push_back(current);
+
+    return result;
 }
 
 /**
@@ -135,7 +157,7 @@ void Person::setDialogue(Dialogue *d) {
 
 void Person::setNpcType(PersonNpcType t) {
     npcType = t;
-    xu4_assert(!isVendor() || dialogue == NULL, "vendor has dialogue");
+    zu4_assert(!isVendor() || dialogue == NULL, "vendor has dialogue");
 }
 
 list<string> Person::getConversationText(Conversation *cnv, const char *inquiry) {
@@ -190,7 +212,7 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                     case Script::INPUT_STRING: {
                         string str = ReadStringController::get(script->getInputMaxLen(), TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
                         if (str.size()) {
-                            lowercase(str);                        
+                            transform(str.begin(), str.end(), str.begin(), ::tolower);
                             script->setVar(script->getInputName(), str);
                         }
                         else script->unsetVar(script->getInputName());
@@ -200,9 +222,10 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                         ReadPlayerController getPlayerCtrl;
                         eventHandler->pushController(&getPlayerCtrl);
                         int player = getPlayerCtrl.waitFor();
-                        if (player != -1) {                            
-                            string player_str = xu4_to_string(player+1);
-                            script->setVar(script->getInputName(), player_str);
+                        if (player != -1) {
+                            char buffer[16];
+                            snprintf(buffer, sizeof(buffer), "%d", player + 1);
+                            script->setVar(script->getInputName(), (string)buffer);
                         }
                         else script->unsetVar(script->getInputName());
                     } break;
@@ -238,18 +261,18 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
             break;
 
         case Conversation::CONFIRMATION:
-            xu4_assert(npcType == NPC_LORD_BRITISH, "invalid state: %d", cnv->state);
+            zu4_assert(npcType == NPC_LORD_BRITISH, "invalid state: %d", cnv->state);
             text += lordBritishGetQuestionResponse(cnv, inquiry);
             break;
 
         case Conversation::ASK:
         case Conversation::ASKYESNO:
-            xu4_assert(npcType != NPC_HAWKWIND, "invalid state for hawkwind conversation");            
+            zu4_assert(npcType != NPC_HAWKWIND, "invalid state for hawkwind conversation");            
             text += talkerGetQuestionResponse(cnv, inquiry) + "\n";
             break;
 
         case Conversation::GIVEBEGGAR:
-            xu4_assert(npcType == NPC_TALKER_BEGGAR, "invalid npc type: %d", npcType);
+            zu4_assert(npcType == NPC_TALKER_BEGGAR, "invalid npc type: %d", npcType);
             text = beggarGetQuantityResponse(cnv, inquiry);
             break;
 
@@ -259,7 +282,7 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
             break;
 
         default:
-            xu4_assert(0, "invalid state: %d", cnv->state);
+            zu4_assert(0, "invalid state: %d", cnv->state);
         }
     }
 
@@ -302,7 +325,7 @@ const char *Person::getChoices(Conversation *cnv) {
         return "012345678\015 \033";
 
     default:
-        xu4_assert(0, "invalid state: %d", cnv->state);
+        zu4_assert(0, "invalid state: %d", cnv->state);
     }
 
     return NULL;
@@ -317,7 +340,7 @@ string Person::getIntro(Conversation *cnv) {
     // As far as I can tell, about 50% of the time they tell you their
     // name in the introduction
     Response *intro;
-    if (xu4_random(2) == 0)
+    if (zu4_random(2) == 0)
         intro = dialogue->getIntro();
     else
         intro = dialogue->getLongIntro();
@@ -368,19 +391,19 @@ void Person::runCommand(Conversation *cnv, const ResponsePart &command) {
         cnv->state = Conversation::CONFIRMATION;
     }
     else if (command == ResponsePart::STARTMUSIC_LB) {
-        xu4_music_play(TRACK_RULEBRIT);
+        zu4_music_play(TRACK_RULEBRIT);
     }
     else if (command == ResponsePart::STARTMUSIC_HW) {
-        xu4_music_play(TRACK_SHOPPING);
+        zu4_music_play(TRACK_SHOPPING);
     }
     else if (command == ResponsePart::STOPMUSIC) {
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     }
     else if (command == ResponsePart::HAWKWIND) {
         c->party->adjustKarma(KA_HAWKWIND);
     }
     else {
-        xu4_assert(0, "unknown command trigger in dialogue response: %s\n", string(command).c_str());
+        zu4_assert(0, "unknown command trigger in dialogue response: %s\n", string(command).c_str());
     }
 } 
 

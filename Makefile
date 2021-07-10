@@ -8,7 +8,7 @@ datadir = $(prefix)/share
 UILIBS = $(shell sdl2-config --libs) -lGL -lGLU
 UIFLAGS = $(shell sdl2-config --cflags)
 
-CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
+CXXFLAGS = -g -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
 #CXXFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
 CFLAGS = $(CXXFLAGS)
 LIBS = $(UILIBS) $(shell xml2-config --libs)
@@ -25,8 +25,10 @@ CSRCS=\
 		src/direction.c \
 		src/error.c \
 		src/image.c \
+		src/imageloader.c \
 		src/io.c \
 		src/miniz.c \
+		src/moongate.c \
 		src/music.c \
 		src/names.c \
 		src/random.c \
@@ -39,6 +41,7 @@ CSRCS=\
 		src/u4_sdl.c \
 		src/video.c \
 		src/weapon.c \
+		src/u4file.c \
 		src/yxml.c
 
 CXXSRCS=\
@@ -64,7 +67,6 @@ CXXSRCS=\
 		src/event.cpp \
 		src/event_sdl.cpp \
 		src/game.cpp \
-		src/imageloader.cpp \
 		src/imagemgr.cpp \
 		src/imageview.cpp \
 		src/intro.cpp \
@@ -75,7 +77,6 @@ CXXSRCS=\
 		src/mapmgr.cpp \
 		src/menu.cpp \
 		src/menuitem.cpp \
-		src/moongate.cpp \
 		src/movement.cpp \
 		src/object.cpp \
 		src/person.cpp \
@@ -94,8 +95,6 @@ CXXSRCS=\
 		src/tileset.cpp \
 		src/tileview.cpp \
 		src/u4.cpp \
-		src/u4file.cpp \
-		src/utils.cpp \
 		src/view.cpp \
 		src/xml.cpp
 
@@ -108,6 +107,3 @@ $(MAIN): $(OBJS)
 
 clean::
 	rm -rf *~ */*~ $(OBJS) $(MAIN)
-
-TAGS: $(CSRCS) $(CXXSRCS)
-	etags *.h $(CSRCS) $(CXXSRCS)

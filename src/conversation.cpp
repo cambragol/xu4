@@ -3,6 +3,8 @@
  */
 
 #include <string.h>
+#include <algorithm>
+
 #include "conversation.h"
 #include "error.h"
 #include "person.h"
@@ -23,6 +25,8 @@ const ResponsePart ResponsePart::STARTMUSIC_HW("<STARTMUSIC_HW>", "", true);
 const ResponsePart ResponsePart::STOPMUSIC("<STOPMUSIC>", "", true);
 const ResponsePart ResponsePart::HAWKWIND("<HAWKWIND>", "", true);
 const unsigned int Conversation::BUFFERLEN = 16;
+
+static const char *strwhitespace = "\t\013\014 \n\r";
 
 Response::Response(const string &response) : references(0) {
     add(response);
@@ -112,14 +116,16 @@ Response *Dialogue::Question::getResponse(bool yes) {
  */ 
 Dialogue::Keyword::Keyword(const string &kw, Response *resp) :
     keyword(kw), response(resp->addref()) {
-    trim(keyword);
-    lowercase(keyword);
+    keyword.erase(keyword.find_last_not_of(strwhitespace) + 1);
+    keyword.erase(0, keyword.find_first_not_of(strwhitespace));
+    transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
 }
 
 Dialogue::Keyword::Keyword(const string &kw, const string &resp) :
     keyword(kw), response((new Response(resp))->addref()) {
-    trim(keyword);
-    lowercase(keyword);
+    keyword.erase(keyword.find_last_not_of(strwhitespace) + 1);
+    keyword.erase(0, keyword.find_first_not_of(strwhitespace));
+    transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
 }
 
 Dialogue::Keyword::~Keyword() {
@@ -180,7 +186,7 @@ Dialogue::Keyword *Dialogue::operator[](const string &kw) {
 }
 
 const ResponsePart &Dialogue::getAction() const { 
-    int prob = xu4_random(0x100);
+    int prob = zu4_random(0x100);
 
     /* Does the person turn away from/attack you? */
     if (prob >= turnAwayProb)
@@ -265,7 +271,7 @@ Conversation::InputType Conversation::getInputRequired(int *bufferlen) {
         return INPUT_NONE;
     }
 
-    xu4_assert(0, "invalid state: %d", state);
+    zu4_assert(0, "invalid state: %d", state);
     return INPUT_NONE;
 }
 
